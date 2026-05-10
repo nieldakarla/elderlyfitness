@@ -16,6 +16,36 @@ export default function App() {
     document.documentElement.style.setProperty('--font-scale', String(state.settings.fontScale));
   }, [state.settings.theme, state.settings.fontScale]);
 
+  useEffect(() => {
+    const o = window.screen?.orientation;
+    if (!o?.lock) return;
+
+    const lockPortrait = () => {
+      try {
+        o.lock('portrait').catch(() => {});
+      } catch {}
+    };
+    const unlock = () => { try { o.unlock(); } catch {} };
+
+    lockPortrait();
+
+    function handleFullscreenChange() {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        unlock();
+      } else {
+        lockPortrait();
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      unlock();
+    };
+  }, []);
+
   return (
     <AppShell>
       <Routes>
