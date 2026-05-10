@@ -15,16 +15,16 @@ export default defineConfig({
         short_name: 'Atividade',
         description: 'Acompanhe sua atividade física diária',
         lang: 'pt-BR',
-        start_url: '/',
-        scope: '/',
+        start_url: '/elderlyfitness/',
+        scope: '/elderlyfitness/',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#0a0a0a',
         theme_color: '#0b6e4f',
         icons: [
-          { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
+          { src: '/elderlyfitness/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
           {
-            src: '/icons/icon-maskable.svg',
+            src: '/elderlyfitness/icons/icon-maskable.svg',
             sizes: 'any',
             type: 'image/svg+xml',
             purpose: 'maskable',
@@ -37,7 +37,8 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: ({ url }) =>
-              url.origin === self.location.origin && url.pathname.startsWith('/icons/'),
+              url.origin === self.location.origin &&
+              url.pathname.startsWith('/elderlyfitness/icons/'),
             handler: 'CacheFirst',
             options: {
               cacheName: 'icons',
