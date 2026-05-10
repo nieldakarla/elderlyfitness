@@ -232,15 +232,16 @@ h3 {
 .month-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 3px;
+  padding: 0 var(--gap);
 }
 
 .month-grid .weekday {
   text-align: center;
-  font-weight: 600;
-  font-size: 0.85rem;
+  font-weight: 700;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  padding: 4px 0;
+  padding: 4px 0 6px;
 }
 
 .day-cell {
@@ -254,7 +255,8 @@ h3 {
   align-items: center;
   justify-content: center;
   position: relative;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   padding: 2px;
   min-height: 44px;
@@ -271,39 +273,41 @@ h3 {
 
 .day-cell .marker {
   position: absolute;
-  bottom: 4px;
-  font-size: 0.85rem;
+  bottom: 3px;
   line-height: 1;
 }
 
 .day-cell.has-workout .marker::before {
   content: '○';
   color: var(--color-text-muted);
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .day-cell.completed .marker::before {
   content: '✓';
   color: var(--color-success);
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .day-cell.rest .marker::before {
   content: '—';
   color: var(--color-text-muted);
+  font-size: 0.8rem;
 }
 
 .month-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--gap);
+  margin-bottom: 8px;
 }
 
 .month-header button {
   min-width: var(--touch-min);
   padding: 0;
+  border-color: transparent;
+  font-size: 1.6rem;
 }
 
 .dialog-backdrop {

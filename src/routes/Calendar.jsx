@@ -27,24 +27,25 @@ export default function Calendar() {
 
   return (
     <div className="stack">
-      <h1>Calendário</h1>
-
       <div className="month-header">
-        <button onClick={() => go(-1)} aria-label="Mês anterior">
+        <button onClick={() => go(-1)} aria-label="Mês anterior" style={{ fontSize: '1.6rem', minWidth: 56 }}>
           ‹
         </button>
-        <strong style={{ fontSize: '1.1rem' }}>{monthLabel(view.year, view.month0)}</strong>
-        <button onClick={() => go(1)} aria-label="Próximo mês">
+        <strong style={{ fontSize: '1.15rem' }}>{monthLabel(view.year, view.month0)}</strong>
+        <button onClick={() => go(1)} aria-label="Próximo mês" style={{ fontSize: '1.6rem', minWidth: 56 }}>
           ›
         </button>
       </div>
 
-      <MonthGrid
-        year={view.year}
-        month0={view.month0}
-        onPickDay={pickDay}
-        selectedYmd={selected}
-      />
+      {/* grid extends past normal padding so cells use full screen width */}
+      <div style={{ margin: '0 calc(-1 * var(--gap))' }}>
+        <MonthGrid
+          year={view.year}
+          month0={view.month0}
+          onPickDay={pickDay}
+          selectedYmd={selected}
+        />
+      </div>
 
       <div className="row-end">
         <button
