@@ -277,14 +277,16 @@ h3 {
 }
 
 .day-cell.has-workout .marker::before {
-  content: '●';
-  color: var(--color-primary);
+  content: '○';
+  color: var(--color-text-muted);
+  font-size: 1rem;
 }
 
 .day-cell.completed .marker::before {
   content: '✓';
   color: var(--color-success);
-  font-weight: 800;
+  font-weight: 900;
+  font-size: 1.1rem;
 }
 
 .day-cell.rest .marker::before {
