@@ -50,6 +50,7 @@ export default function Routine() {
             <div className="row" style={{ justifyContent: 'space-between' }}>
               <h2 style={{ margin: 0 }}>{weekdayLabel(wk)}</h2>
               <button
+                className="primary"
                 onClick={() => setPickerFor(wk)}
                 disabled={activeExercises.length === 0}
                 aria-label={`Adicionar treino em ${weekdayLabel(wk)}`}
@@ -71,6 +72,7 @@ export default function Routine() {
                   >
                     <span>{exerciseName(id)}</span>
                     <button
+                      className="danger"
                       onClick={() => removeFromDay(wk, id)}
                       aria-label={`Remover ${exerciseName(id)} de ${weekdayLabel(wk)}`}
                     >
