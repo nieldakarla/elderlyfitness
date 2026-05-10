@@ -32,7 +32,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: '/index.html',
+        navigateFallback: '/elderlyfitness/index.html',
         navigateFallbackDenylist: [/^\/youtube/, /youtube\.com/, /youtu\.be/],
         runtimeCaching: [
           {
