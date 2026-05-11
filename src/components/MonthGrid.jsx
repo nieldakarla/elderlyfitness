@@ -1,16 +1,18 @@
 import { buildMonthGrid, todayYMD, weekHeader } from '../lib/date.js';
 import { useStore } from '../state/store.jsx';
+import { useT } from '../lib/useT.js';
 import { dayStatus } from '../lib/schedule.js';
 import DayCell from './DayCell.jsx';
 
 export default function MonthGrid({ year, month0, onPickDay, selectedYmd }) {
   const { state } = useStore();
+  const { t, lang } = useT();
   const days = buildMonthGrid(year, month0, state.settings.weekStartsOn);
   const today = todayYMD();
-  const header = weekHeader(state.settings.weekStartsOn);
+  const header = weekHeader(state.settings.weekStartsOn, lang);
 
   return (
-    <div className="month-grid" role="grid" aria-label="Calendário do mês">
+    <div className="month-grid" role="grid" aria-label={t('calendar.grid_aria')}>
       {header.map((h) => (
         <div key={h.key} className="weekday" role="columnheader">
           {h.label}

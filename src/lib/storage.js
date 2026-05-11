@@ -1,3 +1,5 @@
+import { detectLanguage, DEFAULT_LANGUAGE } from './i18n.js';
+
 const KEY = 'ef:v1';
 
 export const initialState = {
@@ -6,14 +8,20 @@ export const initialState = {
   routine: { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] },
   overrides: {},
   completions: {},
-  settings: { theme: 'light', fontScale: 1, weekStartsOn: 1 },
+  settings: { theme: 'light', fontScale: 1, weekStartsOn: 1, language: DEFAULT_LANGUAGE },
   meta: { createdAt: new Date().toISOString(), lastBackupReminderAt: null },
 };
 
 export function loadState() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return { ok: true, state: initialState, fresh: true };
+    if (!raw) {
+      const fresh = {
+        ...initialState,
+        settings: { ...initialState.settings, language: detectLanguage() },
+      };
+      return { ok: true, state: fresh, fresh: true };
+    }
     const parsed = JSON.parse(raw);
     return { ok: true, state: migrate(parsed), fresh: false };
   } catch (err) {

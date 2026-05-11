@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useStore } from './state/store.jsx';
+import { useT } from './lib/useT.js';
 import AppShell from './components/AppShell.jsx';
 import Today from './routes/Today.jsx';
 import Calendar from './routes/Calendar.jsx';
@@ -10,11 +11,17 @@ import Settings from './routes/Settings.jsx';
 
 export default function App() {
   const { state } = useStore();
+  const { t, lang } = useT();
 
   useEffect(() => {
     document.documentElement.dataset.theme = state.settings.theme;
     document.documentElement.style.setProperty('--font-scale', String(state.settings.fontScale));
   }, [state.settings.theme, state.settings.fontScale]);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = t('app.title');
+  }, [lang, t]);
 
   useEffect(() => {
     const o = window.screen?.orientation;

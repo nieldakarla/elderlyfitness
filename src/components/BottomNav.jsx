@@ -1,16 +1,18 @@
 import { NavLink } from 'react-router-dom';
+import { useT } from '../lib/useT.js';
 
 const items = [
-  { to: '/', label: 'Hoje', icon: '☀' },
-  { to: '/calendario', label: 'Mês', icon: '▦' },
-  { to: '/rotina', label: 'Rotina', icon: '↻' },
-  { to: '/biblioteca', label: 'Treinos', icon: '☰' },
-  { to: '/configuracoes', label: 'Ajustes', icon: '⚙' },
+  { to: '/', labelKey: 'nav.today', icon: '☀' },
+  { to: '/calendario', labelKey: 'nav.month', icon: '▦' },
+  { to: '/rotina', labelKey: 'nav.routine', icon: '↻' },
+  { to: '/biblioteca', labelKey: 'nav.exercises', icon: '☰' },
+  { to: '/configuracoes', labelKey: 'nav.settings', icon: '⚙' },
 ];
 
 export default function BottomNav() {
+  const { t } = useT();
   return (
-    <nav className="bottom-nav" aria-label="Navegação principal">
+    <nav className="bottom-nav" aria-label={t('nav.aria')}>
       {items.map((item) => (
         <NavLink
           key={item.to}
@@ -21,7 +23,7 @@ export default function BottomNav() {
           <span className="icon" aria-hidden="true">
             {item.icon}
           </span>
-          <span>{item.label}</span>
+          <span>{t(item.labelKey)}</span>
         </NavLink>
       ))}
     </nav>

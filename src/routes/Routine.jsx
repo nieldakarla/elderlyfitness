@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
+import { useT } from '../lib/useT.js';
 import { weekdayKeys, weekdayLabel } from '../lib/date.js';
 
 export default function Routine() {
   const { state, actions } = useStore();
-  const [pickerFor, setPickerFor] = useState(null); // weekday key or null
+  const { t, lang } = useT();
+  const [pickerFor, setPickerFor] = useState(null);
 
   const orderedDays = (() => {
     const start = state.settings.weekStartsOn || 0;
@@ -17,7 +19,7 @@ export default function Routine() {
   const activeExercises = Object.values(state.exercises).filter((e) => !e.archived);
 
   function exerciseName(id) {
-    return state.exercises[id]?.name || '(treino removido)';
+    return state.exercises[id]?.name || t('library.removed_placeholder');
   }
 
   function removeFromDay(weekday, exerciseId) {
@@ -37,30 +39,28 @@ export default function Routine() {
 
   return (
     <div className="stack">
-      <h1>Rotina semanal</h1>
-      <p className="muted">
-        Defina o que fazer em cada dia. Repete toda semana. Ajustes pontuais por data são feitos no
-        Calendário.
-      </p>
+      <h1>{t('routine.title')}</h1>
+      <p className="muted">{t('routine.description')}</p>
 
       {orderedDays.map((wk) => {
         const ids = state.routine[wk] || [];
+        const wkLabel = weekdayLabel(wk, lang);
         return (
           <div key={wk} className="card">
             <div className="row" style={{ justifyContent: 'space-between' }}>
-              <h2 style={{ margin: 0 }}>{weekdayLabel(wk)}</h2>
+              <h2 style={{ margin: 0 }}>{wkLabel}</h2>
               <button
                 className="primary"
                 onClick={() => setPickerFor(wk)}
                 disabled={activeExercises.length === 0}
-                aria-label={`Adicionar treino em ${weekdayLabel(wk)}`}
+                aria-label={t('routine.add_aria', { weekday: wkLabel })}
               >
-                + Adicionar
+                {t('routine.add')}
               </button>
             </div>
             {ids.length === 0 ? (
               <div className="muted" style={{ marginTop: 8 }}>
-                Descanso
+                {t('routine.rest')}
               </div>
             ) : (
               <ul style={{ listStyle: 'none', padding: 0, margin: '12px 0 0' }}>
@@ -74,9 +74,9 @@ export default function Routine() {
                     <button
                       className="danger"
                       onClick={() => removeFromDay(wk, id)}
-                      aria-label={`Remover ${exerciseName(id)} de ${weekdayLabel(wk)}`}
+                      aria-label={t('routine.remove_aria', { name: exerciseName(id), weekday: wkLabel })}
                     >
-                      Remover
+                      {t('routine.remove')}
                     </button>
                   </li>
                 ))}
@@ -88,7 +88,7 @@ export default function Routine() {
 
       {activeExercises.length === 0 && (
         <div className="banner">
-          Cadastre treinos na <strong>Biblioteca</strong> primeiro para poder atribuí-los aqui.
+          <span dangerouslySetInnerHTML={{ __html: t('routine.no_exercises') }} />
         </div>
       )}
 
@@ -101,7 +101,9 @@ export default function Routine() {
           onClick={() => setPickerFor(null)}
         >
           <div className="dialog" onClick={(e) => e.stopPropagation()}>
-            <h2 id="pick-title">Adicionar em {weekdayLabel(pickerFor)}</h2>
+            <h2 id="pick-title">
+              {t('routine.picker_title', { weekday: weekdayLabel(pickerFor, lang) })}
+            </h2>
             <div className="stack-sm" style={{ marginTop: 12 }}>
               {activeExercises.map((ex) => {
                 const already = (state.routine[pickerFor] || []).includes(ex.id);
@@ -112,13 +114,13 @@ export default function Routine() {
                     disabled={already}
                     style={{ justifyContent: 'flex-start', textAlign: 'left' }}
                   >
-                    {ex.name} {already && '(já adicionado)'}
+                    {ex.name} {already && t('routine.already_added')}
                   </button>
                 );
               })}
             </div>
             <div className="row-end" style={{ marginTop: 16 }}>
-              <button onClick={() => setPickerFor(null)}>Fechar</button>
+              <button onClick={() => setPickerFor(null)}>{t('common.close')}</button>
             </div>
           </div>
         </div>

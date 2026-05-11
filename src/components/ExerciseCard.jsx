@@ -1,6 +1,8 @@
 import { thumbnailUrl } from '../lib/youtube.js';
+import { useT } from '../lib/useT.js';
 
 export default function ExerciseCard({ exercise, action }) {
+  const { t } = useT();
   return (
     <div className="card">
       <div className="row" style={{ alignItems: 'flex-start' }}>
@@ -17,7 +19,7 @@ export default function ExerciseCard({ exercise, action }) {
           <h3 style={{ margin: 0 }}>{exercise.name}</h3>
           {exercise.durationMin && (
             <div className="muted" style={{ marginTop: 4 }}>
-              {exercise.durationMin} min
+              {t('day.minutes', { n: exercise.durationMin })}
             </div>
           )}
           {exercise.notes && <div style={{ marginTop: 6 }}>{exercise.notes}</div>}

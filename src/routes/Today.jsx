@@ -1,4 +1,5 @@
 import { useStore } from '../state/store.jsx';
+import { useT } from '../lib/useT.js';
 import { todayYMD, dayLabelLong } from '../lib/date.js';
 import DayWorkouts from '../components/DayWorkouts.jsx';
 
@@ -7,6 +8,7 @@ const DAY_MS = 1000 * 60 * 60 * 24;
 
 export default function Today() {
   const { state, actions } = useStore();
+  const { t, lang } = useT();
   const ymd = todayYMD();
 
   const showBackupReminder = (() => {
@@ -25,30 +27,30 @@ export default function Today() {
   return (
     <div className="stack">
       <div>
-        <h1>Hoje</h1>
-        <p className="muted" style={{ marginTop: -4 }}>{dayLabelLong(ymd)}</p>
+        <h1>{t('nav.today')}</h1>
+        <p className="muted" style={{ marginTop: -4 }}>{dayLabelLong(ymd, lang)}</p>
       </div>
 
       {exerciseCount === 0 && (
         <div className="banner">
-          <strong>Bem-vindo!</strong>
-          <p style={{ margin: '4px 0 0' }}>
-            Comece cadastrando seus treinos na <strong>Biblioteca</strong>, depois monte a{' '}
-            <strong>Rotina</strong> semanal.
-          </p>
+          <strong>{t('today.welcome')}</strong>
+          <p
+            style={{ margin: '4px 0 0' }}
+            dangerouslySetInnerHTML={{ __html: t('today.welcome_message') }}
+          />
         </div>
       )}
 
       {showBackupReminder && (
         <div className="banner">
-          Que tal exportar um <strong>backup</strong> dos seus dados? Vá em Ajustes → Exportar.
+          <span dangerouslySetInnerHTML={{ __html: t('today.backup_reminder') }} />
           <div className="row-end" style={{ marginTop: 8 }}>
             <button
               onClick={() =>
                 actions.updateMeta({ lastBackupReminderAt: new Date().toISOString() })
               }
             >
-              Lembrar depois
+              {t('today.remind_later')}
             </button>
           </div>
         </div>

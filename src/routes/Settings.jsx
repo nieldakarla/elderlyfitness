@@ -1,19 +1,27 @@
 import { useRef, useState } from 'react';
 import { useStore } from '../state/store.jsx';
+import { useT } from '../lib/useT.js';
 import { exportJSON, readJSONFile, validateImported } from '../lib/backup.js';
+import { SUPPORTED_LANGUAGES } from '../lib/i18n.js';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
-
-const FONT_OPTIONS = [
-  { value: 1, label: 'Normal' },
-  { value: 1.25, label: 'Grande' },
-  { value: 1.5, label: 'Maior' },
-];
 
 export default function Settings() {
   const { state, actions } = useStore();
+  const { t, lang } = useT();
   const fileRef = useRef(null);
   const [importPreview, setImportPreview] = useState(null);
   const [importError, setImportError] = useState('');
+
+  const fontOptions = [
+    { value: 1, label: t('settings.font_normal') },
+    { value: 1.25, label: t('settings.font_large') },
+    { value: 1.5, label: t('settings.font_larger') },
+  ];
+
+  const languageLabels = {
+    'pt-BR': t('settings.lang_pt'),
+    en: t('settings.lang_en'),
+  };
 
   function changeTheme(theme) {
     actions.updateSettings({ theme });
@@ -24,6 +32,9 @@ export default function Settings() {
   function changeWeekStart(day) {
     actions.updateSettings({ weekStartsOn: Number(day) });
   }
+  function changeLanguage(value) {
+    actions.updateSettings({ language: value });
+  }
 
   async function handleFile(e) {
     setImportError('');
@@ -32,12 +43,12 @@ export default function Settings() {
     try {
       const data = await readJSONFile(file);
       if (!validateImported(data)) {
-        setImportError('Arquivo inválido. Selecione um backup gerado pelo próprio app.');
+        setImportError(t('settings.import_invalid'));
         return;
       }
       setImportPreview(data);
     } catch (err) {
-      setImportError('Não foi possível ler o arquivo.');
+      setImportError(t('settings.import_read_error'));
     } finally {
       e.target.value = '';
     }
@@ -49,38 +60,42 @@ export default function Settings() {
     setImportPreview(null);
   }
 
+  function handleExport() {
+    exportJSON(state, t('backup.filename_prefix'));
+  }
+
   const exerciseCount = Object.values(state.exercises).filter((e) => !e.archived).length;
   const completionDays = Object.keys(state.completions).length;
 
   return (
     <div className="stack">
-      <h1>Ajustes</h1>
+      <h1>{t('settings.title')}</h1>
 
       <section className="card stack-sm">
-        <h2 style={{ marginTop: 0 }}>Aparência</h2>
+        <h2 style={{ marginTop: 0 }}>{t('settings.appearance')}</h2>
 
         <div>
-          <label>Tema</label>
+          <label>{t('settings.theme')}</label>
           <div className="toggle-group">
             <button
               className={state.settings.theme === 'light' ? 'active' : ''}
               onClick={() => changeTheme('light')}
             >
-              Claro
+              {t('settings.theme_light')}
             </button>
             <button
               className={state.settings.theme === 'dark' ? 'active' : ''}
               onClick={() => changeTheme('dark')}
             >
-              Escuro
+              {t('settings.theme_dark')}
             </button>
           </div>
         </div>
 
         <div>
-          <label>Tamanho da fonte</label>
+          <label>{t('settings.font_size')}</label>
           <div className="toggle-group">
-            {FONT_OPTIONS.map((opt) => (
+            {fontOptions.map((opt) => (
               <button
                 key={opt.value}
                 className={state.settings.fontScale === opt.value ? 'active' : ''}
@@ -93,35 +108,49 @@ export default function Settings() {
         </div>
 
         <div>
-          <label>Início da semana</label>
+          <label>{t('settings.week_start')}</label>
           <div className="toggle-group">
             <button
               className={state.settings.weekStartsOn === 0 ? 'active' : ''}
               onClick={() => changeWeekStart(0)}
             >
-              Domingo
+              {t('settings.week_sunday')}
             </button>
             <button
               className={state.settings.weekStartsOn === 1 ? 'active' : ''}
               onClick={() => changeWeekStart(1)}
             >
-              Segunda
+              {t('settings.week_monday')}
             </button>
+          </div>
+        </div>
+
+        <div>
+          <label>{t('settings.language')}</label>
+          <div className="toggle-group">
+            {SUPPORTED_LANGUAGES.map((code) => (
+              <button
+                key={code}
+                className={lang === code ? 'active' : ''}
+                onClick={() => changeLanguage(code)}
+              >
+                {languageLabels[code] || code}
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="card stack-sm">
-        <h2 style={{ marginTop: 0 }}>Backup</h2>
+        <h2 style={{ marginTop: 0 }}>{t('settings.backup')}</h2>
         <p className="muted" style={{ margin: 0 }}>
-          Seus dados ficam só neste aparelho. Exporte um arquivo regularmente para não perder nada
-          se trocar de celular ou limpar dados do navegador.
+          {t('settings.backup_description')}
         </p>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <button className="primary" onClick={() => exportJSON(state)}>
-            Exportar dados
+          <button className="primary" onClick={handleExport}>
+            {t('settings.export')}
           </button>
-          <button onClick={() => fileRef.current?.click()}>Importar dados</button>
+          <button onClick={() => fileRef.current?.click()}>{t('settings.import')}</button>
           <input
             ref={fileRef}
             type="file"
@@ -138,19 +167,19 @@ export default function Settings() {
       </section>
 
       <section className="card">
-        <h2 style={{ marginTop: 0 }}>Resumo</h2>
+        <h2 style={{ marginTop: 0 }}>{t('settings.summary')}</h2>
         <ul style={{ paddingLeft: 20, margin: 0 }}>
-          <li>{exerciseCount} treinos ativos na biblioteca</li>
-          <li>{completionDays} dias com treino marcado</li>
-          <li>Versão dos dados: {state.version}</li>
+          <li>{t('settings.summary_active', { count: exerciseCount })}</li>
+          <li>{t('settings.summary_days', { count: completionDays })}</li>
+          <li>{t('settings.summary_version', { version: state.version })}</li>
         </ul>
       </section>
 
       {importPreview && (
         <ConfirmDialog
-          title="Substituir todos os dados?"
-          message="Importar este backup apaga todos os treinos, rotina, calendário e histórico atuais. Não dá para desfazer."
-          confirmLabel="Substituir"
+          title={t('settings.replace_title')}
+          message={t('settings.replace_message')}
+          confirmLabel={t('settings.replace_label')}
           danger
           onConfirm={confirmImport}
           onCancel={() => setImportPreview(null)}

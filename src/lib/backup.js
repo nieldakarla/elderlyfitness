@@ -1,10 +1,10 @@
-export function exportJSON(state) {
+export function exportJSON(state, filenamePrefix = 'backup') {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   const stamp = new Date().toISOString().slice(0, 10);
   a.href = url;
-  a.download = `atividade-fisica-backup-${stamp}.json`;
+  a.download = `${filenamePrefix}-${stamp}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fromYMD, todayYMD, monthLabel, addMonths, dayLabelLong } from '../lib/date.js';
+import { useT } from '../lib/useT.js';
 import MonthGrid from '../components/MonthGrid.jsx';
 import DayWorkouts from '../components/DayWorkouts.jsx';
 
 export default function Calendar() {
   const { ymd: paramYmd } = useParams();
   const navigate = useNavigate();
+  const { t, lang } = useT();
   const initialYmd = paramYmd || todayYMD();
   const initialDate = fromYMD(initialYmd);
 
@@ -28,16 +30,15 @@ export default function Calendar() {
   return (
     <div className="stack">
       <div className="month-header">
-        <button onClick={() => go(-1)} aria-label="Mês anterior" style={{ fontSize: '1.6rem', minWidth: 56 }}>
+        <button onClick={() => go(-1)} aria-label={t('calendar.prev_month')} style={{ fontSize: '1.6rem', minWidth: 56 }}>
           ‹
         </button>
-        <strong style={{ fontSize: '1.15rem' }}>{monthLabel(view.year, view.month0)}</strong>
-        <button onClick={() => go(1)} aria-label="Próximo mês" style={{ fontSize: '1.6rem', minWidth: 56 }}>
+        <strong style={{ fontSize: '1.15rem' }}>{monthLabel(view.year, view.month0, lang)}</strong>
+        <button onClick={() => go(1)} aria-label={t('calendar.next_month')} style={{ fontSize: '1.6rem', minWidth: 56 }}>
           ›
         </button>
       </div>
 
-      {/* grid extends past normal padding so cells use full screen width */}
       <div style={{ margin: '0 calc(-1 * var(--gap))' }}>
         <MonthGrid
           year={view.year}
@@ -50,19 +51,19 @@ export default function Calendar() {
       <div className="row-end">
         <button
           onClick={() => {
-            const t = todayYMD();
-            const d = fromYMD(t);
+            const tYmd = todayYMD();
+            const d = fromYMD(tYmd);
             setView({ year: d.getFullYear(), month0: d.getMonth() });
-            pickDay(t);
+            pickDay(tYmd);
           }}
         >
-          Ir para hoje
+          {t('calendar.go_today')}
         </button>
       </div>
 
       {selected && (
-        <section aria-label="Detalhe do dia" className="stack">
-          <h2 style={{ marginTop: 16 }}>{dayLabelLong(selected)}</h2>
+        <section aria-label={t('calendar.day_detail')} className="stack">
+          <h2 style={{ marginTop: 16 }}>{dayLabelLong(selected, lang)}</h2>
           <DayWorkouts ymd={selected} />
         </section>
       )}

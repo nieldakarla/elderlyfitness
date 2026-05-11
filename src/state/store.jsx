@@ -97,7 +97,7 @@ export function StoreProvider({ children }) {
   useEffect(() => {
     const result = loadState();
     if (!result.ok) {
-      errorRef.current = 'Não foi possível ler os dados salvos no aparelho.';
+      errorRef.current = 'error.load';
     }
     dispatch({ type: 'HYDRATE', state: result.state });
     hydratedRef.current = true;
@@ -107,7 +107,7 @@ export function StoreProvider({ children }) {
     if (!hydratedRef.current) return;
     const result = saveState(state);
     if (!result.ok) {
-      errorRef.current = 'Não foi possível salvar — armazenamento indisponível.';
+      errorRef.current = 'error.save';
     }
   }, [state]);
 
@@ -168,6 +168,6 @@ export function StoreProvider({ children }) {
 
 export function useStore() {
   const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error('useStore deve ser usado dentro de StoreProvider');
+  if (!ctx) throw new Error('useStore must be used within StoreProvider');
   return ctx;
 }

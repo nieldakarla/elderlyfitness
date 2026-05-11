@@ -1,4 +1,7 @@
+import { useT } from '../lib/useT.js';
+
 export default function DayCell({ day, ymd, inMonth, isToday, status, onClick }) {
+  const { t } = useT();
   const classes = ['day-cell'];
   if (!inMonth) classes.push('outside');
   if (isToday) classes.push('today');
@@ -7,11 +10,12 @@ export default function DayCell({ day, ymd, inMonth, isToday, status, onClick })
   else if (status?.hasWorkout) classes.push('has-workout');
 
   const aria = (() => {
-    const parts = [`Dia ${day}`];
-    if (status?.isRest) parts.push('descanso');
-    else if (status?.allDone) parts.push('todos os treinos feitos');
-    else if (status?.hasWorkout) parts.push(`${status.done} de ${status.total} treinos feitos`);
-    if (isToday) parts.push('hoje');
+    const parts = [t('daycell.aria_day', { day })];
+    if (status?.isRest) parts.push(t('daycell.aria_rest'));
+    else if (status?.allDone) parts.push(t('daycell.aria_all_done'));
+    else if (status?.hasWorkout)
+      parts.push(t('daycell.aria_progress', { done: status.done, total: status.total }));
+    if (isToday) parts.push(t('daycell.aria_today'));
     return parts.join(', ');
   })();
 
