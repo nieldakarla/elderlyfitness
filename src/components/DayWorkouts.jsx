@@ -94,7 +94,7 @@ export default function DayWorkouts({ ymd }) {
       ) : (
         <>
           {allDone && (
-            <div className="card" style={{ background: 'var(--color-primary)', color: 'var(--color-primary-text)', textAlign: 'center' }}>
+            <div className="card" style={{ background: 'var(--color-success)', color: 'var(--color-primary-text)', textAlign: 'center' }}>
               <div style={{ fontSize: '2rem' }}>🎉</div>
               <h2 style={{ margin: '4px 0 0' }}>{t('day.all_done_title')}</h2>
               <p style={{ margin: '4px 0 0', opacity: 0.85 }}>{t('day.all_done_message')}</p>

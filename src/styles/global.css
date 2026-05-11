@@ -47,9 +47,9 @@ button:disabled {
 }
 
 button.primary {
-  background: var(--color-primary);
-  color: var(--color-primary-text);
-  border-color: var(--color-primary);
+  background: var(--color-cta-bg);
+  color: var(--color-cta-text);
+  border-color: var(--color-cta-bg);
 }
 
 button.danger {
@@ -88,7 +88,7 @@ label {
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--color-link);
 }
 
 :focus-visible {

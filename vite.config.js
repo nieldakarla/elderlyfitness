@@ -19,8 +19,8 @@ export default defineConfig({
         scope: '/elderlyfitness/',
         display: 'standalone',
         orientation: 'any',
-        background_color: '#0a0a0a',
-        theme_color: '#0b6e4f',
+        background_color: '#0a0a23',
+        theme_color: '#0a0a23',
         icons: [
           { src: '/elderlyfitness/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
           {
