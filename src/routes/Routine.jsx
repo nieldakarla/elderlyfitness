@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { useT } from '../lib/useT.js';
 import { weekdayKeys, weekdayLabel } from '../lib/date.js';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 
 export default function Routine() {
   const { state, actions } = useStore();
   const { t, lang } = useT();
   const [pickerFor, setPickerFor] = useState(null);
+  const [confirmRemove, setConfirmRemove] = useState(null); // { weekday, exerciseId, name, weekdayLabel }
 
   const orderedDays = (() => {
     const start = state.settings.weekStartsOn || 0;
@@ -25,6 +27,7 @@ export default function Routine() {
   function removeFromDay(weekday, exerciseId) {
     const next = (state.routine[weekday] || []).filter((id) => id !== exerciseId);
     actions.setRoutineDay(weekday, next);
+    setConfirmRemove(null);
   }
 
   function addToDay(weekday, exerciseId) {
@@ -73,7 +76,7 @@ export default function Routine() {
                     <span>{exerciseName(id)}</span>
                     <button
                       className="danger"
-                      onClick={() => removeFromDay(wk, id)}
+                      onClick={() => setConfirmRemove({ weekday: wk, exerciseId: id, name: exerciseName(id), wkLabel })}
                       aria-label={t('routine.remove_aria', { name: exerciseName(id), weekday: wkLabel })}
                     >
                       {t('routine.remove')}
@@ -90,6 +93,17 @@ export default function Routine() {
         <div className="banner">
           <span dangerouslySetInnerHTML={{ __html: t('routine.no_exercises') }} />
         </div>
+      )}
+
+      {confirmRemove && (
+        <ConfirmDialog
+          title={t('routine.confirm_remove_title', { name: confirmRemove.name })}
+          message={t('routine.confirm_remove_message', { weekday: confirmRemove.wkLabel })}
+          confirmLabel={t('routine.remove')}
+          danger
+          onConfirm={() => removeFromDay(confirmRemove.weekday, confirmRemove.exerciseId)}
+          onCancel={() => setConfirmRemove(null)}
+        />
       )}
 
       {pickerFor && (

@@ -103,6 +103,8 @@ const dictionaries = {
     'routine.already_added': '(já adicionado)',
     'routine.add_aria': 'Adicionar treino em {weekday}',
     'routine.remove_aria': 'Remover {name} de {weekday}',
+    'routine.confirm_remove_title': 'Remover "{name}"?',
+    'routine.confirm_remove_message': 'Este treino será removido de {weekday}. Você pode adicioná-lo de volta quando quiser.',
 
     'form.name_label': 'Nome do treino',
     'form.name_placeholder': 'Ex: Alongamento matinal',
@@ -276,6 +278,8 @@ const dictionaries = {
     'routine.already_added': '(already added)',
     'routine.add_aria': 'Add workout to {weekday}',
     'routine.remove_aria': 'Remove {name} from {weekday}',
+    'routine.confirm_remove_title': 'Remove "{name}"?',
+    'routine.confirm_remove_message': 'This workout will be removed from {weekday}. You can add it back any time.',
 
     'form.name_label': 'Workout name',
     'form.name_placeholder': 'Ex: Morning stretch',
