@@ -37,8 +37,10 @@ button {
   border-radius: var(--radius);
   padding: 0 var(--gap);
   min-height: var(--touch-min);
+  max-width: 100%;
   cursor: pointer;
   font-weight: 600;
+  white-space: normal;
 }
 
 button:disabled {
@@ -65,6 +67,7 @@ button.ghost {
 input[type='text'],
 input[type='url'],
 input[type='number'],
+input[type='date'],
 select,
 textarea {
   width: 100%;
@@ -170,11 +173,12 @@ h3 {
 }
 
 .card {
-  background: var(--color-surface);
+  background: var(--color-card);
   border: 2px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--gap);
   margin-bottom: var(--gap);
+  overflow-wrap: break-word;
 }
 
 .stack {
@@ -193,6 +197,7 @@ h3 {
   display: flex;
   gap: var(--gap-sm);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .row-end {
@@ -248,7 +253,7 @@ h3 {
   aspect-ratio: 1;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  background: var(--color-card);
   color: var(--color-text);
   display: flex;
   flex-direction: column;
@@ -328,14 +333,16 @@ h3 {
   padding: var(--gap);
   max-width: 480px;
   width: 100%;
+  overflow-wrap: break-word;
 }
 
 .banner {
-  background: var(--color-surface-2);
+  background: var(--color-card-strong);
   border: 2px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--gap);
   margin-bottom: var(--gap);
+  overflow-wrap: break-word;
 }
 
 .banner.error {
@@ -362,7 +369,7 @@ h3 {
   display: inline-block;
   padding: 2px 10px;
   border-radius: 999px;
-  background: var(--color-surface-2);
+  background: var(--color-card-strong);
   border: 1px solid var(--color-border);
   font-size: 0.85rem;
   font-weight: 600;
@@ -404,4 +411,75 @@ h3 {
 .toggle-group button.active {
   background: var(--color-primary);
   color: var(--color-primary-text);
+}
+
+:root:not([data-theme='dark']),
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root:not([data-theme='dark']) .bottom-nav,
+[data-theme='light'] .bottom-nav {
+  background: var(--gray-90);
+  border-top-color: var(--gray-90);
+  border-radius: 0;
+}
+
+:root:not([data-theme='dark']) .bottom-nav a,
+[data-theme='light'] .bottom-nav a {
+  color: var(--gray-00);
+}
+
+:root:not([data-theme='dark']) .bottom-nav a.active,
+[data-theme='light'] .bottom-nav a.active {
+  color: var(--yellow-gold);
+  border-bottom-color: var(--yellow-gold);
+}
+
+/* Botões: borda visível, texto escuro no tema claro */
+:root:not([data-theme='dark']) button:not(.primary):not(.danger):not(.ghost),
+[data-theme='light'] button:not(.primary):not(.danger):not(.ghost) {
+  border-color: var(--gray-75);
+  color: var(--gray-90);
+}
+
+/* Toggle ativo: navy com texto branco */
+:root:not([data-theme='dark']) .toggle-group button.active,
+[data-theme='light'] .toggle-group button.active {
+  background: var(--gray-90);
+  color: var(--gray-00) !important;
+  border-color: var(--gray-90);
+}
+
+/* Inputs e selects brancos sobre fundo cinza */
+:root:not([data-theme='dark']) input[type='text'],
+[data-theme='light'] input[type='text'],
+:root:not([data-theme='dark']) input[type='url'],
+[data-theme='light'] input[type='url'],
+:root:not([data-theme='dark']) input[type='number'],
+[data-theme='light'] input[type='number'],
+:root:not([data-theme='dark']) input[type='date'],
+[data-theme='light'] input[type='date'],
+:root:not([data-theme='dark']) select,
+[data-theme='light'] select,
+:root:not([data-theme='dark']) textarea,
+[data-theme='light'] textarea {
+  background: var(--gray-00);
+  border-color: var(--gray-15);
+}
+
+:root:not([data-theme='dark']) .day-cell.today,
+[data-theme='light'] .day-cell.today {
+  outline-color: var(--yellow-gold);
+}
+
+:root:not([data-theme='dark']) .banner.error,
+[data-theme='light'] .banner.error,
+:root:not([data-theme='dark']) button.danger,
+[data-theme='light'] button.danger {
+  color: var(--gray-00);
 }

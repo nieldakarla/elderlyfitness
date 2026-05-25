@@ -75,6 +75,29 @@ function reducer(state, action) {
       return { ...state, completions };
     }
 
+    case 'PROGRAM_ADD': {
+      return { ...state, programs: [...(state.programs || []), action.program] };
+    }
+
+    case 'PROGRAM_UPDATE': {
+      const programs = (state.programs || []).map((p) =>
+        p.id === action.id ? { ...p, ...action.changes } : p,
+      );
+      return { ...state, programs };
+    }
+
+    case 'PROGRAM_REMOVE': {
+      const programs = (state.programs || []).filter((p) => p.id !== action.id);
+      return { ...state, programs };
+    }
+
+    case 'PROGRAM_TOGGLE_ACTIVE': {
+      const programs = (state.programs || []).map((p) =>
+        p.id === action.id ? { ...p, active: !p.active } : p,
+      );
+      return { ...state, programs };
+    }
+
     case 'SETTINGS_UPDATE':
       return { ...state, settings: { ...state.settings, ...action.patch } };
 
@@ -104,6 +127,9 @@ export function StoreProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    // hydratedRef is set synchronously before HYDRATE dispatch, so by the time
+    // React re-renders with the hydrated state, this guard is already true.
+    // The pre-hydration render (with empty initialState) is safely skipped.
     if (!hydratedRef.current) return;
     const result = saveState(state);
     if (!result.ok) {
@@ -144,6 +170,18 @@ export function StoreProvider({ children }) {
       },
       toggleCompletion(ymd, exerciseId) {
         dispatch({ type: 'COMPLETION_TOGGLE', ymd, exerciseId });
+      },
+      addProgram(program) {
+        dispatch({ type: 'PROGRAM_ADD', program });
+      },
+      updateProgram(id, changes) {
+        dispatch({ type: 'PROGRAM_UPDATE', id, changes });
+      },
+      removeProgram(id) {
+        dispatch({ type: 'PROGRAM_REMOVE', id });
+      },
+      toggleProgramActive(id) {
+        dispatch({ type: 'PROGRAM_TOGGLE_ACTIVE', id });
       },
       updateSettings(patch) {
         dispatch({ type: 'SETTINGS_UPDATE', patch });

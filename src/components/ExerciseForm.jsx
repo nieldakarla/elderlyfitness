@@ -1,19 +1,31 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { extractVideoId } from '../lib/youtube.js';
 import { useT } from '../lib/useT.js';
 
 export default function ExerciseForm({ initial, onSave, onCancel }) {
   const { t } = useT();
+  const isNew = !initial?.id;
   const [name, setName] = useState(initial?.name || '');
   const [youtubeUrl, setYoutubeUrl] = useState(initial?.youtubeUrl || '');
   const [durationMin, setDurationMin] = useState(initial?.durationMin || '');
   const [notes, setNotes] = useState(initial?.notes || '');
   const [touched, setTouched] = useState(false);
+  const [createAnother, setCreateAnother] = useState(false);
+  const [fetchingTitle, setFetchingTitle] = useState(false);
+  const lastFetchedId = useRef(null);
 
   const trimmedName = name.trim();
   const videoId = extractVideoId(youtubeUrl);
   const urlValid = !youtubeUrl.trim() || !!videoId;
   const canSubmit = trimmedName.length > 0 && !!videoId;
+
+  function reset() {
+    setName('');
+    setYoutubeUrl('');
+    setDurationMin('');
+    setNotes('');
+    setTouched(false);
+  }
 
   function submit(e) {
     e.preventDefault();
@@ -25,7 +37,8 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
       youtubeUrl: youtubeUrl.trim(),
       durationMin: durationMin ? Number(durationMin) : null,
       notes: notes.trim(),
-    });
+    }, createAnother);
+    if (createAnother) reset();
   }
 
   return (
@@ -37,9 +50,10 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder={t('form.name_placeholder')}
+          placeholder={fetchingTitle ? t('form.name_fetching') : t('form.name_placeholder')}
           autoComplete="off"
           required
+          disabled={fetchingTitle}
         />
       </div>
 
@@ -49,7 +63,20 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
           id="ex-url"
           type="url"
           value={youtubeUrl}
-          onChange={(e) => setYoutubeUrl(e.target.value)}
+          onChange={(e) => {
+          const url = e.target.value;
+          setYoutubeUrl(url);
+          const vid = extractVideoId(url);
+          if (vid && vid !== lastFetchedId.current && !name.trim()) {
+            lastFetchedId.current = vid;
+            setFetchingTitle(true);
+            fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vid}&format=json`)
+              .then((r) => r.json())
+              .then((data) => { if (data.title && !name.trim()) setName(data.title); })
+              .catch(() => {})
+              .finally(() => setFetchingTitle(false));
+          }
+        }}
           placeholder={t('form.url_placeholder')}
           inputMode="url"
           autoComplete="off"
@@ -90,11 +117,19 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
         />
       </div>
 
-      <div className="row-end">
-        {onCancel && <button type="button" onClick={onCancel}>{t('common.cancel')}</button>}
-        <button type="submit" className="primary" disabled={!canSubmit}>
-          {t('common.save')}
-        </button>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+        {isNew ? (
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 400, cursor: 'pointer' }}>
+            <input type="checkbox" checked={createAnother} onChange={(e) => setCreateAnother(e.target.checked)} style={{ width: 20, height: 20 }} />
+            {t('form.create_another')}
+          </label>
+        ) : <span />}
+        <div className="row-end" style={{ margin: 0 }}>
+          {onCancel && <button type="button" onClick={onCancel}>{t('common.cancel')}</button>}
+          <button type="submit" className="primary" disabled={!canSubmit}>
+            {t('common.save')}
+          </button>
+        </div>
       </div>
     </form>
   );

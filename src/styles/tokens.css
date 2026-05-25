@@ -12,7 +12,7 @@
 
   --green-light:  #acd157;
   --green-dark:   #00471b;
-  --yellow-gold:  #ffbf00;
+  --yellow-gold:  #f1be32;
   --red-light:    #ffadad;
   --red-dark:     #850000;
   --blue-mid:     #198eee;
@@ -35,13 +35,15 @@
 /* Light theme (default) */
 :root,
 [data-theme='light'] {
-  --color-bg:           var(--gray-00);
-  --color-surface:      var(--gray-05);
+  --color-bg:           var(--gray-05);
+  --color-surface:      var(--gray-00);
   --color-surface-2:    var(--gray-10);
+  --color-card:         var(--gray-00);
+  --color-card-strong:  var(--gray-05);
   --color-text:         var(--gray-90);
   --color-text-muted:   var(--gray-45);
-  --color-border:       var(--gray-75);
-  --color-primary:      var(--green-dark);
+  --color-border:       var(--gray-15);
+  --color-primary:      var(--blue-dark);
   --color-primary-text: var(--gray-00);
   --color-success:      var(--green-dark);
   --color-danger:       var(--red-dark);
@@ -57,6 +59,8 @@
   --color-bg:           var(--gray-90);
   --color-surface:      var(--gray-85);
   --color-surface-2:    var(--gray-80);
+  --color-card:         var(--gray-85);
+  --color-card-strong:  var(--gray-80);
   --color-text:         var(--gray-00);
   --color-text-muted:   var(--gray-45);
   --color-border:       var(--gray-75);

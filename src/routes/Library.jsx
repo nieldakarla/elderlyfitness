@@ -20,9 +20,9 @@ export default function Library() {
       .sort((a, b) => a.name.localeCompare(b.name, lang));
   }, [state.exercises, showArchived, lang]);
 
-  function handleSave(input) {
+  function handleSave(input, createAnother) {
     actions.saveExercise(input);
-    setEditing(null);
+    if (!createAnother) setEditing(null);
   }
 
   function askArchive(exercise) {
