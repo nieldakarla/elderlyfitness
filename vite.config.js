@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig({
-  base: '/elderlyfitness/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/elderlyfitness/' : '/',
   build: { outDir: 'docs' },
   plugins: [
     react(),
@@ -49,4 +49,4 @@ export default defineConfig({
       },
     }),
   ],
-});
+}));
