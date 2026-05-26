@@ -5,3 +5,10 @@ dev-dist
 .DS_Store
 .vite
 *.log
+
+# AI tooling
+CLAUDE.md
+.claude/
+.cursor/
+.aider*
+.copilot/
